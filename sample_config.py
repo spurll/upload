@@ -1,4 +1,4 @@
-from os import urandom, path
+from os import urandom
 
 
 # Web Server
@@ -6,13 +6,13 @@ CSRF_ENABLED = True
 SECRET_KEY = urandom(30)
 PROPAGATE_EXCEPTIONS = True
 
-# SQLAlchemy
-basedir = path.abspath(path.dirname(__file__))
-SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(path.join(basedir, 'app.db'))
+# Upload Options
+FILEPATH = '/upload'
+LIMIT_FILES = True          # If true, won't upload unless directory is empty.
+SIZE_LIMIT = 1000000000     # File size in bytes.
 
-# Download Code Options
-TITLE = 'Title for the Page'
-DOWNLOAD_LIMIT = 5
-CONTACT_EMAIL = 'your@email.here'
-FILEPATH = path.join(basedir, 'download/static')
-FILENAME = 'file_to_download.zip'
+# Notification Options
+NOTIFY = None               # Email sent to this address when new file arrives.
+USERNAME = 'your.email@gmail.com'
+PASSWORD = 'app-specific-password'
+SMTPHOST = 'smtp.gmail.com:587'

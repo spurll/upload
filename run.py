@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
 # Written by Gem Newman. This work is licensed under a Creative Commons
-# Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+# Attribution-ShareAlike 4.0 International License.
 
 
 from argparse import ArgumentParser
 
-from download import app
+from upload import app
 
 
 if __name__ == '__main__':
-    description = "Runs the Flask server for the download code system."
+    description = "Runs the Flask server for the file upload system."
     parser = ArgumentParser(description=description)
     parser.add_argument("-0", "--public", help="Makes the server world-"
                         "accessible by hosting at 0.0.0.0.",
