@@ -1,5 +1,5 @@
 <html>
-    <head>
+	<head>
 		<!-- Support for iOS device sizes. -->
 		<meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no'>
 
@@ -27,7 +27,7 @@
 
 			#file-drop
 			{
-				display: none;
+				display: block;
 				font-weight: bold;
 				text-align: center;
 				padding: 100px 0;
@@ -41,6 +41,11 @@
 			#file-drop.hover
 			{
 				border-style: solid;
+			}
+
+			#file_field
+			{
+				display: none;
 			}
 
 			a:link { text-decoration: none; color: #888888; }
@@ -80,13 +85,9 @@
 
 					file_select.addEventListener('change', FileSelectHandler, false);
 
-					// File drop is available.
 					file_drop.addEventListener('dragover', FileDragHover, false);
 					file_drop.addEventListener('dragleave', FileDragHover, false);
 					file_drop.addEventListener('drop', FileSelectHandler, false);
-
-					file_drop.style.display = 'block';
-					file_select.style.display = "none";
 				}
 				{% endif %}
 			}
@@ -114,7 +115,7 @@
 				}
 			}
 		</script>
-    </head>
+	</head>
 
 	<body>
 		<div id="title-bar"><div id="title">Upload</div></div>
