@@ -33,7 +33,7 @@ None
 Known Bugs
 ----------
 
-Anyone can upload anything. This is like the worst idea.
+* Form validation (like the password) is done post-upload and waiting to upload only to be defeated by a typo is terrible.
 
 License Information
 ===================

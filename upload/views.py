@@ -1,8 +1,10 @@
-import os
+from os import path, listdir
+from string import letters, digits, punctuation
+from random import choice
 from flask import render_template, flash, session
 from flask.ext.wtf import Form
-from wtforms.fields import FileField
-from wtforms.validators import Required
+from wtforms.fields import FileField, PasswordField
+from wtforms.validators import Required, ValidationError
 
 from upload import app
 from upload.mailbox import Mailbox
@@ -10,6 +12,14 @@ from upload.mailbox import Mailbox
 
 class UploadForm(Form):
     file_field = FileField(validators=[Required()])
+    password = PasswordField("Password:")
+
+    def validate_password(form, field):
+        if app.config['REQUIRE_PASSWORD']:
+            password = open(app.config['PASSWORD_FILE'], 'r').read()
+            if field.data != password:
+                print('Invalid password: {}'.format(field.data))
+                raise ValidationError('Invalid password.')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -22,7 +32,7 @@ def index():
             try:
                 filename = form.file_field.data.filename
                 form.file_field.data.save(
-                    os.path.join(app.config['FILEPATH'], filename)
+                    path.join(app.config['FILEPATH'], filename)
                 )
 
                 flash('{} uploaded successfully.'.format(filename))
@@ -35,16 +45,24 @@ def index():
                 flash('An error occurred during upload: {}'.format(e))
                 raise
 
+            # Generate new password.
+            password = generate_password()
+            print('New password: {}'.format(password))
+            open(app.config['PASSWORD_FILE'], 'w').write(password)
+
         else:
             if available():
-                flash('Unable to validate file.')
+                flash('Unable to validate: {}'.format(form.errors))
 
     return render_template('index.html', form=form, available=available())
 
-def available():
-    return (
-        not app.config['LIMIT_FILES'] or not os.listdir(app.config['FILEPATH'])
+def generate_password(length=30):
+    return ''.join(
+        choice(letters + digits + punctuation) for i in range(length)
     )
+
+def available():
+    return not app.config['LIMIT_FILES'] or not listdir(app.config['FILEPATH'])
  
 def notify(name):
     mailbox = Mailbox(app.config['USERNAME'], app.config['PASSWORD'],

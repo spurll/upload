@@ -54,7 +54,7 @@
 			a:active { text-decoration: none; color: #888888; }
 
 			body { color: #ffffff; background-color: #222222; overflow-y:auto; text-align: center; margin: 0px; }
-			input[type="submit"] { float: right; width: 20%; }
+			input[type="password"] { float: right; width: 75%; }
 			.messages { font-style: italic; }
 			.title { font-family: serif; font-variant: small-caps; font-size: 200%; }
 		</style>
@@ -135,9 +135,18 @@
 			<form id="form" action="" method="POST" enctype="multipart/form-data">
 				{{form.hidden_tag()}}
 
-				<div>
-					{{form.file_field}}
-					<div id="file-drop">Drop a file here to upload!</div>
+				{% if config.REQUIRE_PASSWORD %}
+				{{form.password(autofocus=True)}}
+				<div style="text-align: left;">{{form.password.label}}</div>
+				{% endif %}
+
+				{{form.file_field}}
+				<div id="file-drop">
+					{% if config.REQUIRE_PASSWORD %}
+					Enter your single-use password above,<br/>then drop a file here to upload.
+					{% else %}
+					Drop a file here to upload.
+					{% endif %}
 				</div>
 			</form>
 			{% else %}

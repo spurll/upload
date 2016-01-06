@@ -1,4 +1,4 @@
-from os import urandom
+from os import path, urandom
 
 
 # Web Server
@@ -8,7 +8,9 @@ PROPAGATE_EXCEPTIONS = True
 
 # Upload Options
 FILEPATH = '/upload'
-LIMIT_FILES = True          # If true, won't upload unless directory is empty.
+REQUIRE_PASSWORD = True     # Users must supply password first.
+PASSWORD_FILE = path.join(path.abspath(path.dirname(__file__)), 'pw')
+LIMIT_FILES = False         # If true, won't upload unless directory is empty.
 SIZE_LIMIT = 1000000000     # File size in bytes.
 
 # Notification Options
