@@ -1,5 +1,5 @@
 from os import path, listdir
-from string import letters, digits, punctuation
+from string import ascii_letters, digits, punctuation
 from random import choice
 from flask import render_template, flash, session
 from flask.ext.wtf import Form
@@ -58,7 +58,7 @@ def index():
 
 def generate_password(length=30):
     return ''.join(
-        choice(letters + digits + punctuation) for i in range(length)
+        choice(ascii_letters + digits + punctuation) for i in range(length)
     )
 
 def available():
