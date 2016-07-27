@@ -6,7 +6,7 @@
 		<title>Upload</title>
 
 		<style type="text/css">
-			#content { width: 500px; margin: auto; padding-top: 10px; }
+			#content { width: 100%; max-width: 500px; margin: auto; padding-top: 10px; }
 
 			#title-bar {
 				width: 100%;
@@ -64,18 +64,7 @@
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", function(event) {Init();});
 
-			function Resize() {
-				// Adapted from http://stackoverflow.com/questions/1248081/get-the-browser-viewport-dimensions-with-javascript
-				var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-				if (width < document.getElementById('content').offsetWidth) {
-					// Resizes the content window to be smaller if viewed on a small screen.
-					document.getElementById('content').style.width = width;
-				}
-			}
-
 			function Init() {
-				Resize();
-
 				{% if available %}
 				// Drag and drop code adapted from http://www.sitepoint.com/html5-file-drag-and-drop/
 				if (window.File && window.FileList && window.FileReader) {
