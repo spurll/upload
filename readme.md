@@ -1,7 +1,8 @@
 Upload
 ======
 
-A web application that allows users to upload a file to the server. This is obviously a bad idea for a whole host of reasons.
+A web application that allows users to upload a file to the server. This is obviously a
+bad idea for a whole host of reasons.
 
 Usage
 =====
@@ -15,12 +16,18 @@ Requirements
 Configuration
 -------------
 
-You'll need to create a `config.py` file. A sample configuration file can be found at `sample_config.py`.
+You'll need to create a `config.py` file. A sample configuration file can be found at
+`sample_config.py`.
 
 Starting the Server
 -------------------
 
-Start the server with `run.py`. By default it will be accessible at `localhost:9999`. To make the server world-accessible or for other options, see `run.py -h`.
+Start the server with `run.py`. By default it will be accessible at `localhost:9999`. To
+make the server world-accessible or for other options, see `run.py -h`.
+
+If you're having trouble configuring your sever, I wrote a
+[blog post](http://blog.spurll.com/2015/02/configuring-flask-uwsgi-and-nginx.html)
+explaining how you can get Flask, uWSGI, and Nginx working together.
 
 Bugs and Feature Requests
 =========================
@@ -33,7 +40,8 @@ None
 Known Bugs
 ----------
 
-* Form validation (like the password) is done post-upload and waiting to upload only to be defeated by a typo is terrible.
+* Form validation (like the password) is done post-upload and waiting to upload only to be
+  defeated by a typo is terrible.
 
 License Information
 ===================
