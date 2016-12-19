@@ -2,7 +2,7 @@ from os import path, listdir
 from string import ascii_letters, digits, punctuation
 from random import choice
 from flask import render_template, flash, session
-from flask.ext.wtf import Form
+from flask_wtf import FlaskForm
 from wtforms.fields import FileField, PasswordField
 from wtforms.validators import Required, ValidationError
 
@@ -10,7 +10,7 @@ from upload import app
 from upload.mailbox import Mailbox
 
 
-class UploadForm(Form):
+class UploadForm(FlaskForm):
     file_field = FileField(validators=[Required()])
     password = PasswordField("Password:")
 
