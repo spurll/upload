@@ -43,12 +43,12 @@ def index():
 
             except Exception as e:
                 flash('An error occurred during upload: {}'.format(e))
-                raise
 
-            # Generate new password.
-            password = generate_password()
-            print('New password: {}'.format(password))
-            open(app.config['PASSWORD_FILE'], 'w').write(password)
+            else:
+                # Generate new password.
+                password = generate_password()
+                print('New password: {}'.format(password))
+                open(app.config['PASSWORD_FILE'], 'w').write(password)
 
         else:
             if available():
