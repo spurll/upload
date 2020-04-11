@@ -1,0 +1,41 @@
+div#title-bar {
+    position: unset;
+}
+
+#content {
+    max-width: 500px;
+}
+
+#file-drop
+{
+    display: block;
+    font-weight: bold;
+    text-align: center;
+    padding: 100px 0;
+    margin: 20px 0;
+    color: #777777;
+    border: 2px dashed #777777;
+    cursor: default;
+}
+
+#file-drop.hover
+{
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+#file_field
+{
+    display: none;
+}
+
+label {
+    width: 100px;
+    font-weight: bold;
+    text-align: left;
+}
+
+input[type="password"] {
+    width: calc(100% - 100px);
+    float: right;
+}
