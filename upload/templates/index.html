@@ -1,146 +1,98 @@
 <html>
-	<head>
-		<!-- Support for iOS device sizes. -->
-		<meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no'>
+    <head>
+        <!-- Support for iOS device sizes. -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
 
-		<title>Upload</title>
+        <title>Upload</title>
 
-		<style type="text/css">
-			#content { width: 100%; max-width: 500px; margin: auto; padding-top: 10px; }
+        <style type="text/css">
+        </style>
 
-			#title-bar {
-				width: 100%;
-				top: 0px;
-				background-color: #111111;
-				border-bottom: solid #444444;
-			}
+        <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='common.css') }} />
+        <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }} />
+        <link rel="shortcut icon" href={{ url_for('static', filename='icon.png') }}/>
 
-			#title {
-				width: 100%;
-				margin: auto;
-				font-variant: small-caps;
-				font-size: 200%;
-				text-align: center;
-				padding-top: 10px;
-				padding-bottom: 10px;
-			}
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function(event) { init(); });
 
-			#file-drop
-			{
-				display: block;
-				font-weight: bold;
-				text-align: center;
-				padding: 100px 0;
-				margin: 10px 0;
-				color: #777777;
-				border: 2px dashed #444444;
-				border-radius: 5px;
-				cursor: default;
-			}
+            function init() {
+                {% if available %}
+                // Drag and drop code adapted from http://www.sitepoint.com/html5-file-drag-and-drop/
+                if (window.File && window.FileList && window.FileReader) {
+                    var file_select = document.getElementById('file_field');
+                    var file_drop = document.getElementById('file-drop');
+                    var submit = document.getElementById('submit');
 
-			#file-drop.hover
-			{
-				border-style: solid;
-			}
+                    file_select.addEventListener('change', fileSelectHandler, false);
 
-			#file_field
-			{
-				display: none;
-			}
+                    file_drop.addEventListener('dragover', fileDragHover, false);
+                    file_drop.addEventListener('dragleave', fileDragHover, false);
+                    file_drop.addEventListener('drop', fileSelectHandler, false);
+                }
+                {% endif %}
+            }
 
-			a:link { text-decoration: none; color: #888888; }
-			a:visited { text-decoration: none; color: #888888; }
-			a:hover { text-decoration: none; color: #ffffff; }
-			a:active { text-decoration: none; color: #888888; }
+            function fileDragHover(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                e.target.className = (e.type == 'dragover' ? 'hover' : '');
+            }
 
-			body { color: #ffffff; background-color: #222222; overflow-y:auto; text-align: center; margin: 0px; }
-			input[type="password"] { float: right; width: 75%; }
-			.messages { font-style: italic; }
-			.title { font-family: serif; font-variant: small-caps; font-size: 200%; }
-		</style>
+            function fileSelectHandler(e) {
+                // Cancel event and hover styling.
+                fileDragHover(e);
 
-		<link rel="shortcut icon" href="{{url_for('static', filename='icon.png')}}"/>
+                // Fill the contents of the file selector with whatever was dropped (if anything).
+                var file_select = document.getElementById('file_field');
+                file_select.files = e.target.files || e.dataTransfer.files;
 
-		<script type="text/javascript">
-			document.addEventListener("DOMContentLoaded", function(event) {Init();});
+                if (file_select.files.length > 1) {
+                    document.getElementById('messages').innerHTML += '<p>Only one file may be uploaded at a time.</p>';
+                } else if (file_select.files[0].size >= {{ config.SIZE_LIMIT }}) {
+                    document.getElementById('messages').innerHTML += '<p>Your file cannot be uploaded because it exceeds {{ config.SIZE_LIMIT / 1000000 }} MB.</p>';
+                } else {
+                    document.getElementById('form').submit()
+                }
+            }
+        </script>
+    </head>
 
-			function Init() {
-				{% if available %}
-				// Drag and drop code adapted from http://www.sitepoint.com/html5-file-drag-and-drop/
-				if (window.File && window.FileList && window.FileReader) {
-					var file_select = document.getElementById('file_field');
-					var file_drop = document.getElementById('file-drop');
-					var submit = document.getElementById('submit');
+    <body>
+        <div id="title-bar"><div id="title">Upload</div></div>
 
-					file_select.addEventListener('change', FileSelectHandler, false);
+        <div id="content">
+            {% with messages = get_flashed_messages() %}
+            <div id="messages" class="messages">
+                {% if messages %}
+                {% for message in messages %}
+                <p>{{ message | safe }}</p>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endwith %}
 
-					file_drop.addEventListener('dragover', FileDragHover, false);
-					file_drop.addEventListener('dragleave', FileDragHover, false);
-					file_drop.addEventListener('drop', FileSelectHandler, false);
-				}
-				{% endif %}
-			}
+            {% if available %}
+            <form id="form" action="" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
 
-			function FileDragHover(e) {
-				e.stopPropagation();
-				e.preventDefault();
-				e.target.className = (e.type == 'dragover' ? 'hover' : '');
-			}
+                {% if config.REQUIRE_PASSWORD %}
+                {{ form.password(autofocus=True) }}
+                <div>{{ form.password.label }}</div>
+                {% endif %}
 
-			function FileSelectHandler(e) {
-				// Cancel event and hover styling.
-				FileDragHover(e);
-
-				// Fill the contents of the file selector with whatever was dropped (if anything).
-				var file_select = document.getElementById('file_field');
-				file_select.files = e.target.files || e.dataTransfer.files;
-
-				if (file_select.files.length > 1) {
-					document.getElementById('messages').innerHTML += '<p>Only one file may be uploaded at a time.</p>';
-				} else if (file_select.files[0].size >= {{config.SIZE_LIMIT}}) {
-					document.getElementById('messages').innerHTML += '<p>Your file cannot be uploaded because it exceeds {{config.SIZE_LIMIT / 1000000}} MB.</p>';
-				} else {
-					document.getElementById('form').submit()
-				}
-			}
-		</script>
-	</head>
-
-	<body>
-		<div id="title-bar"><div id="title">Upload</div></div>
-
-		<div id="content">
-			{% with messages = get_flashed_messages() %}
-			<div id="messages" class="messages">
-				{% if messages %}
-				{% for message in messages %}
-				<p>{{ message|safe }}</p>
-				{% endfor %}
-				{% endif %}
-			</div>
-			{% endwith %}
-
-			{% if available %}
-			<form id="form" action="" method="POST" enctype="multipart/form-data">
-				{{form.hidden_tag()}}
-
-				{% if config.REQUIRE_PASSWORD %}
-				{{form.password(autofocus=True)}}
-				<div style="text-align: left;">{{form.password.label}}</div>
-				{% endif %}
-
-				{{form.file_field}}
-				<div id="file-drop">
-					{% if config.REQUIRE_PASSWORD %}
-					Enter your single-use password above,<br/>then drop a file here to upload.
-					{% else %}
-					Drop a file here to upload.
-					{% endif %}
-				</div>
-			</form>
-			{% else %}
-			<p>Uploading additional files is not possible at this time.</p>
-			{% endif %}
-		</div>
-	</body>
+                {{ form.file_field }}
+                <div id="file-drop">
+                    {% if config.REQUIRE_PASSWORD %}
+                    Enter your single-use password above,<br />then drop a file here to upload.
+                    {% else %}
+                    Drop a file here to upload.
+                    {% endif %}
+                </div>
+            </form>
+            {% else %}
+            <p>Uploading additional files is not possible at this time.</p>
+            {% endif %}
+        </div>
+    </body>
 </html>
+
