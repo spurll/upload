@@ -52,18 +52,21 @@ def index():
 
         else:
             if available():
-                flash('Unable to validate: {}'.format(form.errors))
+                flash_errors(form)
 
     return render_template('index.html', form=form, available=available())
+
 
 def generate_password(length=30):
     return ''.join(
         choice(ascii_letters + digits + punctuation) for i in range(length)
     )
 
+
 def available():
     return not app.config['LIMIT_FILES'] or not listdir(app.config['FILEPATH'])
  
+
 def notify(name):
     mailbox = Mailbox(app.config['USERNAME'], app.config['PASSWORD'],
                       app.config['SMTPHOST'])
@@ -73,3 +76,15 @@ def notify(name):
         'A new file has been uploaded to the server: ' + name,
         'Upload'
     )
+
+
+def flash_errors(form):
+    for field, messages in form.errors.items():
+        label = getattr(getattr(getattr(form, field), 'label'), 'text', '')
+        label = label.replace(':', '')
+        error = ', '.join(messages)
+
+        message = f'Error in {label}: {error}' if label else 'Error: {error}'
+
+        flash(message)
+        print(message)
