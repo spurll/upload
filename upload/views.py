@@ -4,14 +4,14 @@ from random import choice
 from flask import render_template, flash, session
 from flask_wtf import FlaskForm
 from wtforms.fields import FileField, PasswordField
-from wtforms.validators import Required, ValidationError
+from wtforms.validators import DataRequired, ValidationError
 
 from upload import app
 from upload.mailbox import Mailbox
 
 
 class UploadForm(FlaskForm):
-    file_field = FileField(validators=[Required()])
+    file_field = FileField(validators=[DataRequired()])
     password = PasswordField("Password:")
 
     def validate_password(form, field):

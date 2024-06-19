@@ -10,7 +10,6 @@ Usage
 Requirements
 ------------
 
-* flask
 * flask-wtf
 
 Configuration
